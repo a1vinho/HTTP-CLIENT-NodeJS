@@ -1,0 +1,6 @@
+- Objetivo principal: Construir uma interface CLI que funcione como um client http (mais ou menos igual ao curl).
+
+- A interface aceitará os 4 principais métodos http e também aceitará corpo,headers http e tokens.
+
+
+// cansado demais para raciocina ;/
