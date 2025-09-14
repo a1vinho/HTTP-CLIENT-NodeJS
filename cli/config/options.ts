@@ -1,8 +1,9 @@
 import https from "https";
 import http from "http";
 import colors from "colors";
+import { DefineStatusResponse, FormatHeaders } from "../utils/index";
 
-import { SaveOutputFile, SendBodyFile } from "../utils/index";
+import { SaveOutputFile } from "../utils/index";
 
 
 function Request(protocol: string, options: http.RequestOptions): http.ClientRequest {
@@ -10,30 +11,48 @@ function Request(protocol: string, options: http.RequestOptions): http.ClientReq
     return request;
 };
 
-export function OptionMethodGet(url: URL, method: string, outputFile: string): void {
+export function OptionMethodGet(ObjectData: {
+    url: URL;
+    method: string;
+    outputFile: string | boolean;
+    header: string;
+}): void {
+    let { url, method, outputFile, header } = ObjectData;
+    const headersConfig = FormatHeaders(header);
+
+    console.log(outputFile)
     // console.log(url.host + url.pathname)
     // console.log(url)
     const request = Request(url.protocol, {
         hostname: url.hostname,
         port: url.protocol === 'https:' ? 443 : 80,
         method,
-        path: url.pathname + url.search
+        path: url.pathname + url.search,
+        headers: {
+            ...headersConfig
+        }
     });
     request.on('response', response => {
-        let body = '';
+        let res = '';
         response.on('data', data => {
-            body += data;
+            res += data;
         });
 
         response.on('end', function () {
-            SaveOutputFile(outputFile as string, {
-                data: body,
+            SaveOutputFile(typeof outputFile === 'string' ? outputFile : false, {
+                data: res,
                 headers: response.headers
             });
-            console.log(colors.yellow(JSON.stringify({
-                "Response Data": body,
-                "Headers Response": response.headers
-            }, null, 2)));
+
+            if (!response.statusCode) {
+                return;
+            }
+            const ObjectResponseData = {
+                "Response Data": res,
+                "Headers Response": response.headers,
+                "Status Code": response.statusCode
+            };
+            DefineStatusResponse(ObjectResponseData);
         })
     })
     request.end();
@@ -41,30 +60,20 @@ export function OptionMethodGet(url: URL, method: string, outputFile: string): v
 export function SendDataServer(ObjectData: {
     url: URL;
     method: string;
-    outputFile: string;
+    outputFile: string | boolean;
     data: string | Buffer;
-    bodyFile: string;
+    header: string;
 }): void {
-    let { url, method, outputFile, data, bodyFile } = ObjectData;
+    let { url, method, outputFile, data, header } = ObjectData;
 
-    const headers: { 'content-type': string, "content-length"?: string | number } = {
-        "content-type": 'application/json',
-    };
-    // let resBodyFile = '';
-    // if (bodyFile && !data) {
-    //     const read = SendBodyFile(bodyFile);
-    //     read.on('data', function (d) {
-    //         resBodyFile += d;
-    //     });
-    //     // data = res;
-    // };
+    const headersConfig = FormatHeaders(header);
     const request = Request(url.protocol, {
         hostname: url.hostname,
         method,
         path: url.pathname + url.search,
         headers: {
-            "content-type": 'application/json',
-            "content-length": Buffer.byteLength(data)
+            "content-length": Buffer.byteLength(data),
+            ...headersConfig
         }
     });
     request.on('response', function (response) {
@@ -79,18 +88,26 @@ export function SendDataServer(ObjectData: {
             };
         });
         response.on('end', function () {
-            SaveOutputFile(outputFile, {
+
+            // console.log(outputFile);
+            console.log(res)
+            SaveOutputFile(typeof outputFile === 'string' ? outputFile : false, {
                 data: Buffer.from(res),
                 headers: response.headers
             });
 
-            console.log(colors.green(JSON.stringify({
+            if (!response.statusCode) {
+                return;
+            }
+            const ObjectResponseData = {
                 "Response Data": res,
-                "Headers Response": response.headers
-            }, null, 2)));
+                "Headers Response": response.headers,
+                "Status Code": response.statusCode
+            };
+            DefineStatusResponse(ObjectResponseData);
         })
     });
-    console.log(data.toString())
+    // console.log(data.toString())
     request.write(data);
     request.end();
 };

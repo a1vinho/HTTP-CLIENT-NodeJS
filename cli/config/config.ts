@@ -23,15 +23,21 @@ export default async function ConfigYarg() {
         },
         output: {
             default: false,
+            alias: 'o',
             type: "string",
             // choices: ['file', 'terminal', 'json'],
             describe: 'Essa opção é responsável por salva a resposta da requisição em algum lugar especifico'
         },
-        "bodyFile": {
-            default: false,
+        header: {
             type: 'string',
-            describe: "Essa opção permite você envia um arquivo para o corpo da requisição (limite de 1200 caracteres)"
+            alias: 'h',
+            describe: "Essa opção permite envia cabeçalhos personalizados para a requisição"
         }
+        // "bodyFile": {
+        //     default: false,
+        //     type: 'string',
+        //     describe: "Essa opção permite você envia um arquivo para o corpo da requisição (limite de 1200 caracteres)"
+        // }
     }).help('help').version('1.2.0').parse();
     return argv;
 }

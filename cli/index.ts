@@ -1,9 +1,8 @@
 import colors from "colors";
 
-import { OptionMethodGet, SendDataServer} from "./config/options";
+import { OptionMethodGet, SendDataServer } from "./config/options";
 import ConfigYarg from "./config/config";
-import {SendBodyFile} from "./utils/index";
-
+// import { SendBodyFile } from "./utils/index";
 
 console.log(colors.yellow(`
 - GitHub: https://www.github.com/a1vinho    
@@ -15,9 +14,9 @@ console.log(colors.yellow(`
         method,
         url,
         output,
-        bodyFile
+        header
     } = await ConfigYarg();
-
+    // console.log(output)
     if (!url) {
         throw new Error('ERRO:Url is not present');
     };
@@ -25,7 +24,12 @@ console.log(colors.yellow(`
         const Url = new URL(url);
         switch (method) {
             case 'GET': {
-                OptionMethodGet(Url, 'GET', output as string);
+                OptionMethodGet({
+                    method,
+                    outputFile: typeof output !== 'boolean' ? output : false,
+                    header: header ? header : '',
+                    url: Url
+                });
                 break
             };
             case 'POST':
@@ -35,9 +39,9 @@ console.log(colors.yellow(`
                     data: body ? body : '',
                     method,
                     outputFile: typeof output !== 'boolean' ? output : '',
-                    url:Url,
-                    bodyFile: typeof bodyFile !== 'boolean' ? bodyFile : ''
-                }); 
+                    url: Url,
+                    header: header as string
+                });
                 break
             };
         }

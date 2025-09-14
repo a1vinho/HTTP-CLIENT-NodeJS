@@ -4,6 +4,7 @@ const app = express();
 
 app.use(express.json());
 app.get('/json',function(request,response):Response {
+    console.log(request.headers);
     return response.status(200).json({
         message: "Server Acess",
         ok:true
