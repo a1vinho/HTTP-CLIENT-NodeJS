@@ -16,7 +16,6 @@ console.log(colors.yellow(`
         output,
         header
     } = await ConfigYarg();
-    // console.log(output)
     if (!url) {
         throw new Error('ERRO:Url is not present');
     };

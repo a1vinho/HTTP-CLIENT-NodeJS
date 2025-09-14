@@ -8,7 +8,7 @@ export function SaveOutputFile(file: string | boolean, response: {
     headers: object
 }) {
     if (!file || typeof file === 'boolean') {
-        console.log(true)
+        console.log(response)
         return;
     }
     const extername = path.extname(file);
@@ -37,6 +37,9 @@ export function FormatHeaders(header: string | Array<string>) {
     const headersConfig: any = {
         "user-agent": "node.js"
     };
+    if (!header) {
+        return headersConfig;
+    }
     let key = '';
     let value = '';
     if (Array.isArray(header)) {
@@ -78,6 +81,8 @@ export function DefineStatusResponse(ObjectResponseData: {
     "Headers Response": http.IncomingHttpHeaders;
     "Status Code": number
 }) {
+
+    console.log(ObjectResponseData)
     const StringObjectResponseData = JSON.stringify(ObjectResponseData, null, 2);
     switch (ObjectResponseData["Status Code"]) {
         case 200:
