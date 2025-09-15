@@ -2,7 +2,7 @@ import https from "https";
 import http from "http";
 import colors from "colors";
 
-import { DefineStatusResponse, FormatHeaders,SaveOutputFile } from "../utils/index";
+import { DefineStatusResponse, FormatHeaders, SaveOutputFile } from "../utils/index";
 
 function Request(protocol: string, options: http.RequestOptions): http.ClientRequest {
     const request = protocol === 'http:' ? http.request(options) : https.request(options);
@@ -39,7 +39,7 @@ export function OptionMethodGet(ObjectData: {
         response.on('end', function () {
 
             SaveOutputFile(typeof outputFile === 'string' ? outputFile : false, {
-                data: Buffer.from(res),
+                data: res,
                 headers: response.headers
             });
 
@@ -67,6 +67,9 @@ export function SendDataServer(ObjectData: {
     let { url, method, outputFile, data, header } = ObjectData;
 
     const headersConfig = FormatHeaders(header);
+    if (method === 'POST') {
+        headersConfig['content-type'] = 'application/json';
+    };
     const request = Request(url.protocol, {
         hostname: url.hostname,
         method,
@@ -92,7 +95,7 @@ export function SendDataServer(ObjectData: {
             // console.log(outputFile);
             console.log(res)
             SaveOutputFile(typeof outputFile === 'string' ? outputFile : false, {
-                data: Buffer.from(res),
+                data: res,
                 headers: response.headers
             });
 

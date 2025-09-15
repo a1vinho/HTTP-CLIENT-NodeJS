@@ -35,7 +35,7 @@ function OptionMethodGet(ObjectData) {
         });
         response.on('end', function () {
             (0, index_1.SaveOutputFile)(typeof outputFile === 'string' ? outputFile : false, {
-                data: Buffer.from(res),
+                data: res,
                 headers: response.headers
             });
             if (!response.statusCode) {
@@ -79,7 +79,7 @@ function SendDataServer(ObjectData) {
             // console.log(outputFile);
             console.log(res);
             (0, index_1.SaveOutputFile)(typeof outputFile === 'string' ? outputFile : false, {
-                data: Buffer.from(res),
+                data: res,
                 headers: response.headers
             });
             if (!response.statusCode) {

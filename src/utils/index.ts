@@ -24,7 +24,7 @@ export function SaveOutputFile(file: string | boolean, response: {
         write.write(Buffer.from(JSON.stringify(ObjectData, null, 2)));
     };
     write.on('error', function (err) {
-        
+
         if (err) {
             console.log(colors.red(`ERRO:${err}`));
             process.exit();
