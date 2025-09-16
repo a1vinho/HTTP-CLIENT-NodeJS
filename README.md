@@ -12,7 +12,7 @@ Esse projeto foi desenvolvido com as tecnologias ditadas abaixo.
 npm i -g http-client-al 
 ```
 
-Você pode visitar a lib no site da **NPM**: https://www.npmjs.com/package/http-client-al?activeTab=code
+Você pode visitar a lib no site da **NPM**: https://www.npmjs.com/package/http-al-client
 
 ## Parametrôs utilizados 
 Os parametôs são uma maneria de personalizar ainda mais sua requisição.
@@ -63,3 +63,4 @@ alhttp --url http://localhost:8080/auth/profile --header "Authorization=example-
 
 # END 
 Obrigado a todos pela a atenção,fiquem a vontade para criar suas proprias versões e aprimoramento do repositório.Agradeço
+
